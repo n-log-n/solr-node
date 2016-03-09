@@ -122,7 +122,7 @@ describe('Query', function() {
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ 'fq=like:10 AND hate:10' ]);
+      expect(query.params).to.eql([ 'fq=like%3A10%20AND%20hate%3A10' ]);
     });
   });
 
@@ -140,7 +140,7 @@ describe('Query', function() {
     it('should get terms params when params is string.', function() {
       //given
       var testQuery = new Query();
-      var params = "terms=true&terms.fl=text";
+      var params = 'terms=true&terms.fl=text';
       //when
       var query = testQuery.termsQuery(params);
       //then
