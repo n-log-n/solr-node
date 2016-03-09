@@ -3,9 +3,7 @@
   "version": "0.0.1",
   "description": "Simple Solr Node Client Project",
   "main": "index.js",
-  "scripts": {
-    "test": "gulp test"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/godong9/solr-node.git"

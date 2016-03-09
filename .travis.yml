@@ -5,3 +5,4 @@ before_install:
   - npm install -g gulp
 install:
   - echo 'alternative depen. install'
+script: gulp
