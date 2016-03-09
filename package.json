@@ -27,7 +27,8 @@
     "gulp-mocha": "^2.2.0",
     "jshint": "^2.9.1",
     "jshint-stylish": "^2.1.0",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "nock": "^7.2.2"
   },
   "dependencies": {
     "log4js": "^0.6.33",

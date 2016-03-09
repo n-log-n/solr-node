@@ -5,11 +5,41 @@
 /**
  * Require modules
  */
-var expect = require('chai').expect,
+var nock = require('nock'),
+  expect = require('chai').expect,
   Client = require('../lib/client');
 
 describe('Client', function() {
   var testClient = new Client({core: 'test'});
+  before(function() {
+    nock.cleanAll();
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/error\/select.*/g, '/select/mock')
+      .get('/select/mock')
+      .reply(404);
+
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/test\/select.*/g, '/select/mock')
+      .get('/select/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86,
+          params: { q: 'text:test', wt: 'json' }
+        },
+        response:{
+          numFound: 10,
+          start: 0,
+          docs: []
+        }
+      }));
+  });
+
+  after(function() {
+    nock.cleanAll();
+  });
 
   describe('#constructor', function() {
     it('should create default client.', function() {
@@ -84,7 +114,7 @@ describe('Client', function() {
 
     it('should get search error from server.', function(done) {
       //given
-      var client = new Client({core: 'test'});
+      var client = new Client({core: 'error'});
       //when
       client.requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
         //then
@@ -96,8 +126,8 @@ describe('Client', function() {
 
     it('should get notes data from server when query is query instance.', function(done) {
       //given
-      var client = new Client({core: 'notes'});
-      var query = client.query().q('text:맛집');
+      var client = new Client({core: 'test'});
+      var query = client.query().q('text:test');
       //when
       client.requestGet(client.SEARCH_PATH, query, function(err, result) {
         //then
@@ -109,7 +139,7 @@ describe('Client', function() {
 
     it('should get notes data from server when query is query instance but query is not string.', function(done) {
       //given
-      var client = new Client({core: 'notes'});
+      var client = new Client({core: 'test'});
       var query = client.query().q(null);
       //when
       client.requestGet(client.SEARCH_PATH, query, function(err, result) {
@@ -122,7 +152,7 @@ describe('Client', function() {
 
     it('should get notes data from server when query is string.', function(done) {
       //given
-      var client = new Client({core: 'notes'});
+      var client = new Client({core: 'test'});
       //when
       client.requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
         //then
@@ -134,7 +164,7 @@ describe('Client', function() {
 
     it('should get notes data from server when query is null.', function(done) {
       //given
-      var client = new Client({core: 'notes'});
+      var client = new Client({core: 'test'});
       //when
       client.requestGet(client.SEARCH_PATH, null, function(err, result) {
         //then
@@ -144,6 +174,5 @@ describe('Client', function() {
       });
     });
   });
-
 
 });
