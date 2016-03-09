@@ -231,6 +231,36 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should search data with query options.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .q({text:'test', title:'test'})
+          .fl(['text', 'title'])
+          .start(0)
+          .rows(10)
+          .sort({like:'desc'})
+          .fq({hate:0});
+
+      //when
+      client.search(query, function(err, result) {
+        //then
+        expect(query.params).to.eql([
+          'q=text:test AND title:test',
+          'fl=text,title',
+          'start=0',
+          'rows=10',
+          'sort=like desc',
+          'fq=hate:0'
+        ]);
+
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
   });
 
   describe('#terms', function() {
