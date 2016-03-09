@@ -3,3 +3,6 @@ node_js:
   - "0.12.4"
 install:
   - echo 'alternative depen. install'
+before_script:
+  - npm install -g gulp
+script: gulp
