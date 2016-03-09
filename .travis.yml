@@ -1,8 +1,7 @@
 language: node_js
 node_js:
   - "0.12.4"
-before_script:
+before_install:
   - npm install -g gulp
 install:
   - echo 'alternative depen. install'
-script: gulp
