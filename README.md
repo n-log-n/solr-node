@@ -45,6 +45,3 @@ solrClient.search(objQuery, function (err, result) {
 ```
 gulp 
 ```
-
-## License
-The MIT License

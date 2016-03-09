@@ -12,17 +12,19 @@ var expect = require('chai').expect,
 describe('Client', function() {
   var testClient = new Client({core: 'test'});
   before(function() {
+    nock.disableNetConnect();
+    nock.enableNetConnect(/127.0.0.1/);
     nock.cleanAll();
     nock('http://127.0.0.1:8983')
       .persist()
-      .filteringPath(/\/solr\/error\/select.*/g, '/select/mock')
-      .get('/select/mock')
+      .filteringPath(/\/solr\/error\/select.*/g, '/error/select/mock')
+      .get('/error/select/mock')
       .reply(404);
 
     nock('http://127.0.0.1:8983')
       .persist()
-      .filteringPath(/\/solr\/test\/select.*/g, '/select/mock')
-      .get('/select/mock')
+      .filteringPath(/\/solr\/test\/select.*/g, '/test/select/mock')
+      .get('/test/select/mock')
       .reply(200, JSON.stringify({
         responseHeader: {
           status: 0,
@@ -33,6 +35,20 @@ describe('Client', function() {
           numFound: 10,
           start: 0,
           docs: []
+        }
+      }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/test\/terms.*/g, '/test/terms/mock')
+      .get('/test/terms/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86
+        },
+        terms:{
+          text: []
         }
       }));
   });
@@ -176,7 +192,7 @@ describe('Client', function() {
   });
 
   describe('#search', function() {
-    it('should search data when not used query.', function(done) {
+    it('should search data when not using query.', function(done) {
       //given
       var client = new Client({core: 'test'});
       //when
@@ -212,6 +228,26 @@ describe('Client', function() {
         //then
         expect(err).to.not.exist;
         expect(result.response).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#terms', function() {
+    it('should get terms data.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .termsQ({
+            fl: 'text',
+            prefix: 'te'
+          });
+      //when
+      client.terms(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.terms).to.exist;
         done();
       });
     });
