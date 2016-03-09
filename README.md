@@ -1,6 +1,12 @@
 # solr-node
 Simple Solr Node Client Project
 
+## Install
+
+```
+npm install solr-node
+```
+
 ## Usage
 
 ```js
@@ -11,16 +17,33 @@ var SolrNode = require('solr-node');
 var client = SolrNode();
 
 // Create query
-var query = client.query().q('text:test');
+var strQuery = client.query().q('text:test');
+var objQuery = client.query().q({text:'test', title:'test'});
 
-// Search documents
-solrClient.search(query, function (err, result) {
+// Search documents using strQuery
+solrClient.search(strQuery, function (err, result) {
    if (err) {
       console.log(err);
       return;
    }
    console.log('Response:', result.response);
 });
+
+// Search documents using objQuery
+solrClient.search(objQuery, function (err, result) {
+   if (err) {
+      console.log(err);
+      return;
+   }
+   console.log('Response:', result.response);
+});
+
+```
+
+## Test & Coverage
+
+```
+gulp 
 ```
 
 ## License
