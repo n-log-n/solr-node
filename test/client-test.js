@@ -5,8 +5,8 @@
 /**
  * Require modules
  */
-var nock = require('nock'),
-  expect = require('chai').expect,
+var expect = require('chai').expect,
+  nock = require('nock'),
   Client = require('../lib/client');
 
 describe('Client', function() {
@@ -180,6 +180,21 @@ describe('Client', function() {
       //given
       var client = new Client({core: 'test'});
       var query = client.query().q('text:test');
+      //when
+      client.search(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
+
+    it('should search data when query params is object.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .q({text:'test', title:'test'});
       //when
       client.search(query, function(err, result) {
         //then
