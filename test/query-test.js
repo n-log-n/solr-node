@@ -11,7 +11,7 @@ var expect = require('chai').expect,
 describe('Query', function() {
 
   describe('#q', function() {
-    it('should get query params when query is string.', function() {
+    it('should get query params when params is string.', function() {
       //given
       var testQuery = new Query();
       var params = 'text:test';
@@ -21,7 +21,7 @@ describe('Query', function() {
       expect(query.params).to.eql([ 'q=text:test' ]);
     });
 
-    it('should get query params when query is object.', function() {
+    it('should get query params when params is object.', function() {
       //given
       var testQuery = new Query();
       var params = {
@@ -35,20 +35,100 @@ describe('Query', function() {
     });
   });
 
-  describe('#terms', function() {
-    it('should get terms params when terms is string.', function() {
+  describe('#fl', function() {
+    it('should get fl params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'text';
+      //when
+      var query = testQuery.fl(params);
+      //then
+      expect(query.params).to.eql([ 'fl=text' ]);
+    });
+
+    it('should get fl params when params is array.', function() {
+      //given
+      var testQuery = new Query();
+      var params = ['text','title'];
+      //when
+      var query = testQuery.fl(params);
+      //then
+      expect(query.params).to.eql([ 'fl=text,title' ]);
+    });
+  });
+
+  describe('#start', function() {
+    it('should get start params when params is number.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 10;
+      //when
+      var query = testQuery.start(params);
+      //then
+      expect(query.params).to.eql([ 'start=10' ]);
+    });
+  });
+
+  describe('#rows', function() {
+    it('should get rows params when params is number.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 10;
+      //when
+      var query = testQuery.rows(params);
+      //then
+      expect(query.params).to.eql([ 'rows=10' ]);
+    });
+  });
+
+  describe('#sort', function() {
+    it('should get sort params when params is object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {score:'desc', like:'desc'};
+      //when
+      var query = testQuery.sort(params);
+      //then
+      expect(query.params).to.eql([ 'sort=score desc,like desc' ]);
+    });
+  });
+
+  describe('#fq', function() {
+    it('should get fq params when params is object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {like:10, hate:10};
+      //when
+      var query = testQuery.fq(params);
+      //then
+      expect(query.params).to.eql([ 'fq=like:10 AND hate:10' ]);
+    });
+  });
+
+  describe('#termsQuery', function() {
+    it('should get terms params when params not string and object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.termsQuery(params);
+      //then
+      expect(query.params).to.eql([]);
+    });
+
+    it('should get terms params when params is string.', function() {
       //given
       var testQuery = new Query();
       var params = "terms=true&terms.fl=text";
       //when
-      var terms = testQuery.termsQ(params);
+      var query = testQuery.termsQuery(params);
       //then
-      expect(terms.params).to.eql([
+      expect(query.params).to.eql([
         "terms=true&terms.fl=text"
       ]);
     });
 
-    it('should get terms params when terms is object.', function() {
+    it('should get terms params when params is object.', function() {
       //given
       var testQuery = new Query();
       var params = {
@@ -56,16 +136,30 @@ describe('Query', function() {
         prefix: 'te'
       };
       //when
-      var terms = testQuery.termsQ(params);
+      var query = testQuery.termsQuery(params);
       //then
-      expect(terms.params).to.eql([
+      expect(query.params).to.eql([
         "terms=true",
         "terms.fl=text",
         "terms.prefix=te"
       ]);
     });
 
-    it('should get terms params when terms is object of other params.', function() {
+    it('should get terms params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.termsQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "terms=false"
+      ]);
+    });
+
+    it('should get terms params when params is object of other params.', function() {
       //given
       var testQuery = new Query();
       var params = {
@@ -76,9 +170,9 @@ describe('Query', function() {
         maxcount: 100
       };
       //when
-      var terms = testQuery.termsQ(params);
+      var query = testQuery.termsQuery(params);
       //then
-      expect(terms.params).to.eql([
+      expect(query.params).to.eql([
         'terms=true',
         'terms.fl=text',
         'terms.lower=te',
@@ -88,7 +182,7 @@ describe('Query', function() {
       ]);
     });
 
-    it('should get terms params when terms is object of other params2.', function() {
+    it('should get terms params when params is object of other params2.', function() {
       //given
       var testQuery = new Query();
       var params = {
@@ -102,9 +196,9 @@ describe('Query', function() {
         sort: 'index'
       };
       //when
-      var terms = testQuery.termsQ(params);
+      var query = testQuery.termsQuery(params);
       //then
-      expect(terms.params).to.eql([
+      expect(query.params).to.eql([
         'terms=true',
         'terms.fl=text',
         'terms.regex=[test]',
