@@ -176,7 +176,19 @@ describe('Client', function() {
   });
 
   describe('#search', function() {
-    it('should search data.', function(done) {
+    it('should search data when not used query.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.search('q=text:test', function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
+
+    it('should search data when query is string.', function(done) {
       //given
       var client = new Client({core: 'test'});
       var query = client.query().q('text:test');
@@ -189,7 +201,7 @@ describe('Client', function() {
       });
     });
 
-    it('should search data when query params is object.', function(done) {
+    it('should search data when query is object.', function(done) {
       //given
       var client = new Client({core: 'test'});
       var query =
