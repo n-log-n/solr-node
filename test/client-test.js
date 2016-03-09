@@ -175,4 +175,19 @@ describe('Client', function() {
     });
   });
 
+  describe('#search', function() {
+    it('should search data.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query = client.query().q('text:test');
+      //when
+      client.search(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
+  });
+
 });
