@@ -70,6 +70,18 @@ describe('Client', function() {
   });
 
   describe('#requestGet', function() {
+    it('should get error when invalid arguments.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.requestGet(client.SEARCH_PATH, function(err, result) {
+        //then
+        expect(err).to.equal('Invalid arguments');
+        expect(result).to.not.exist;
+        done();
+      });
+    });
+
     it('should get search error from server.', function(done) {
       //given
       var client = new Client({core: 'test'});
@@ -82,16 +94,56 @@ describe('Client', function() {
       });
     });
 
-    it('should get notes search data from server.', function(done) {
+    it('should get notes data from server when query is query instance.', function(done) {
+      //given
+      var client = new Client({core: 'notes'});
+      var query = client.query().q('text:맛집');
+      //when
+      client.requestGet(client.SEARCH_PATH, query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
+
+    it('should get notes data from server when query is query instance but query is not string.', function(done) {
+      //given
+      var client = new Client({core: 'notes'});
+      var query = client.query().q(null);
+      //when
+      client.requestGet(client.SEARCH_PATH, query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
+
+    it('should get notes data from server when query is string.', function(done) {
       //given
       var client = new Client({core: 'notes'});
       //when
       client.requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
         //then
-        console.log(result);
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        done();
+      });
+    });
+
+    it('should get notes data from server when query is null.', function(done) {
+      //given
+      var client = new Client({core: 'notes'});
+      //when
+      client.requestGet(client.SEARCH_PATH, null, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
         done();
       });
     });
   });
+
 
 });
