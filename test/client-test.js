@@ -239,7 +239,7 @@ describe('Client', function() {
       var client = new Client({core: 'test'});
       var query =
         client.query()
-          .termsQ({
+          .termsQuery({
             fl: 'text',
             prefix: 'te'
           });
