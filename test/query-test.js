@@ -9,6 +9,27 @@ var expect = require('chai').expect,
   Query = require('../lib/query');
 
 describe('Query', function() {
+  describe('#dismax', function() {
+    it('should get dismax params.', function() {
+      //given
+      var testQuery = new Query();
+      //when
+      var query = testQuery.dismax();
+      //then
+      expect(query.params).to.eql([ 'defType=dismax' ]);
+    });
+  });
+
+  describe('#edismax', function() {
+    it('should get edismax params.', function() {
+      //given
+      var testQuery = new Query();
+      //when
+      var query = testQuery.edismax();
+      //then
+      expect(query.params).to.eql([ 'defType=edismax' ]);
+    });
+  });
 
   describe('#q', function() {
     it('should get query params when params is string.', function() {
