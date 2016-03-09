@@ -34,3 +34,6 @@ node_modules
 
 # idea files
 .idea
+
+# coverage files
+coverage
