@@ -10,6 +10,8 @@
   },
   "keywords": [
     "solr",
+    "solr client",
+    "solr node",
     "solr-client",
     "solr-node"
   ],

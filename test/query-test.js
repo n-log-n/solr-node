@@ -118,11 +118,21 @@ describe('Query', function() {
     it('should get fq params when params is object.', function() {
       //given
       var testQuery = new Query();
-      var params = {like:10, hate:10};
+      var params = {field: 'loc', value: "IsWithin(POLYGON((129.3100483 34.9835815,129.3100483 35.3874414,128.787197 35.3874414,128.787197 34.9835815,129.3100483 34.9835815))) distErrPct=0"};
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ 'fq=like%3A10%20AND%20hate%3A10' ]);
+      expect(query.params).to.eql([ "fq=loc:IsWithin(POLYGON((129.3100483 34.9835815,129.3100483 35.3874414,128.787197 35.3874414,128.787197 34.9835815,129.3100483 34.9835815))) distErrPct=0" ]);
+    });
+
+    it('should get fq params when params is object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = [{field:'like', value:10}, {field:'hate', value:10}];
+      //when
+      var query = testQuery.fq(params);
+      //then
+      expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
     });
   });
 
