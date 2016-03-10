@@ -242,7 +242,7 @@ describe('Client', function() {
           .start(0)
           .rows(10)
           .sort({like:'desc'})
-          .fq({hate:0});
+          .fq({field:'hate', value:0});
 
       //when
       client.search(query, function(err, result) {
@@ -253,7 +253,7 @@ describe('Client', function() {
           'start=0',
           'rows=10',
           'sort=like desc',
-          'fq=hate%3A0'
+          'fq=hate:0'
         ]);
 
         expect(err).to.not.exist;
