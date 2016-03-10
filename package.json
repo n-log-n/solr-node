@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/godong9/solr-node/issues"
   },
-  "homepage": "https://github.com/godong9/solr-node#readme",
+  "homepage": "https://github.com/godong9/solr-node/wiki",
   "devDependencies": {
     "chai": "^3.5.0",
     "gulp": "^3.9.1",

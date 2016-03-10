@@ -23,6 +23,12 @@ describe('Client', function() {
 
     nock('http://127.0.0.1:8983')
       .persist()
+      .filteringPath(/\/solr\/error\/update.*/g, '/error/update/mock')
+      .post('/error/update/mock')
+      .reply(404);
+
+    nock('http://127.0.0.1:8983')
+      .persist()
       .filteringPath(/\/solr\/test\/select.*/g, '/test/select/mock')
       .get('/test/select/mock')
       .reply(200, JSON.stringify({
@@ -51,6 +57,18 @@ describe('Client', function() {
           text: []
         }
       }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/test\/update.*/g, '/test/update/mock')
+      .post('/test/update/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86
+        }
+      }));
+
   });
 
   after(function() {
@@ -116,18 +134,6 @@ describe('Client', function() {
   });
 
   describe('#requestGet', function() {
-    it('should get error when invalid arguments.', function(done) {
-      //given
-      var client = new Client({core: 'test'});
-      //when
-      client.requestGet(client.SEARCH_PATH, function(err, result) {
-        //then
-        expect(err).to.equal('Invalid arguments');
-        expect(result).to.not.exist;
-        done();
-      });
-    });
-
     it('should get search error from server.', function(done) {
       //given
       var client = new Client({core: 'error'});
@@ -186,6 +192,69 @@ describe('Client', function() {
         //then
         expect(err).to.not.exist;
         expect(result.response).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#requestPost', function() {
+    it('should get post error from server.', function(done) {
+      //given
+      var client = new Client({core: 'error'});
+      //when
+      client.requestPost(client.UPDATE_PATH, {}, {}, function(err, result) {
+        //then
+        expect(err).to.equal('Solr server error: 404');
+        expect(result).to.not.exist;
+        done();
+      });
+    });
+
+    it('should post data to server when options is null.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var data = {
+        test: 'test',
+        title: 'test'
+      };
+      var options = null;
+      //when
+      client.requestPost(client.UPDATE_PATH, data, options, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+
+    it('should post data to server when options is object.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var data = {
+        test: 'test',
+        title: 'test'
+      };
+      //when
+      client.requestPost(client.UPDATE_PATH, data, {}, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+
+    it('should post data to server when options is string.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var data = {
+        test: 'test',
+        title: 'test'
+      };
+      //when
+      client.requestPost(client.UPDATE_PATH, data, 'commit=true', function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
         done();
       });
     });
@@ -283,4 +352,21 @@ describe('Client', function() {
     });
   });
 
+  describe('#update', function() {
+    it('should post data to server without options', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var data = {
+        text: 'test',
+        title: 'test'
+      };
+      //when
+      client.update(data, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
 });
