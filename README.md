@@ -7,14 +7,22 @@ Simple Solr Node Client Project
 npm install solr-node
 ```
 
+
 ## Usage
+
+### Search
 
 ```js
 // Require module
 var SolrNode = require('solr-node');
 
 // Create client
-var client = SolrNode();
+var client = SolrNode({
+    host: '127.0.0.1',
+    port: '8983',
+    core: 'test',
+    protocol: 'http'
+});
 
 // Create query
 var strQuery = client.query().q('text:test');
@@ -39,6 +47,38 @@ solrClient.search(objQuery, function (err, result) {
 });
 
 ```
+
+### Update
+
+```js
+// Require module
+var SolrNode = require('solr-node');
+
+// Create client
+var client = SolrNode({
+    host: '127.0.0.1',
+    port: '8983',
+    core: 'test',
+    protocol: 'http'
+});
+
+// JSON Data
+var data = {
+    text: 'test',
+    title: 'test'
+};
+
+// Update document to Solr server
+client.update(data, function(err, result) {
+   if (err) {
+      console.log(err);
+      return;
+   }
+   console.log('Response:', result.responseHeader);
+});
+
+```
+
 
 ## Test & Coverage
 
