@@ -1,6 +1,8 @@
 # solr-node
 Simple Solr Node Client Project
 
+[![NPM](https://nodei.co/npm/solr-node.png?downloads=true&stars=true)](https://nodei.co/npm/solr-node/)
+
 ## Install
 
 ```
