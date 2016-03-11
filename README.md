@@ -12,8 +12,6 @@ npm install solr-node
 
 ## Usage
 
-### Search
-
 ```js
 // Require module
 var SolrNode = require('solr-node');
@@ -25,7 +23,11 @@ var client = SolrNode({
     core: 'test',
     protocol: 'http'
 });
+```
 
+### Search
+
+```js
 // Create query
 var strQuery = client.query().q('text:test');
 var objQuery = client.query().q({text:'test', title:'test'});
@@ -53,17 +55,6 @@ solrClient.search(objQuery, function (err, result) {
 ### Update
 
 ```js
-// Require module
-var SolrNode = require('solr-node');
-
-// Create client
-var client = SolrNode({
-    host: '127.0.0.1',
-    port: '8983',
-    core: 'test',
-    protocol: 'http'
-});
-
 // JSON Data
 var data = {
     text: 'test',
@@ -81,6 +72,32 @@ client.update(data, function(err, result) {
 
 ```
 
+### Delete
+
+```js
+// Delete Query
+var strQuery = 'id:testid'
+var objQuery = {id:'testid'}
+
+// Delete document using strQuery
+client.delete(strQuery, function(err, result) {
+   if (err) {
+      console.log(err);
+      return;
+   }
+   console.log('Response:', result.responseHeader);
+});
+
+// Delete document using objQuery
+client.delete(objQuery, function(err, result) {
+   if (err) {
+      console.log(err);
+      return;
+   }
+   console.log('Response:', result.responseHeader);
+});
+
+```
 
 ## Test & Coverage
 
