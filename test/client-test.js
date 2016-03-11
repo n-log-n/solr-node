@@ -353,7 +353,7 @@ describe('Client', function() {
   });
 
   describe('#update', function() {
-    it('should post data to server without options', function(done) {
+    it('should post data to server without options.', function(done) {
       //given
       var client = new Client({core: 'test'});
       var data = {
@@ -368,5 +368,80 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should post data to server with options.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var data = {
+        text: 'test',
+        title: 'test'
+      };
+      var options = { commit: true };
+      //when
+      client.update(data, options, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#delete', function() {
+    it('should delete data to server without options.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query = {id:'testid1'};
+      //when
+      client.delete(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+
+    it('should delete data to server with options when query is object.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query = {id:'testid2'};
+      var options = { commit: true };
+      //when
+      client.delete(query, options, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+
+    it('should delete data to server with options when query is string.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query = "id:testid3";
+      var options = { commit: true };
+      //when
+      client.delete(query, options, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+
+    it('should delete data to server with options when query is null.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query = null;
+      var options = { commit: true };
+      //when
+      client.delete(query, options, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
   });
 });
+
