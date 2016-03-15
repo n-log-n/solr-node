@@ -60,6 +60,34 @@ describe('Client', function() {
 
     nock('http://127.0.0.1:8983')
       .persist()
+      .filteringPath(/\/solr\/test\/mlt.*/g, '/test/mlt/mock')
+      .get('/test/mlt/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86
+        },
+        response: {
+          numFound: 10,
+          start: 0,
+          docs: []
+        },
+        moreLikeThis: {
+          "testId1": {
+            numFound: 10,
+            start: 0,
+            docs: []
+          },
+          "testId2": {
+            numFound: 10,
+            start: 0,
+            docs: []
+          }
+        }
+      }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
       .filteringPath(/\/solr\/test\/update.*/g, '/test/update/mock')
       .post('/test/update/mock')
       .reply(200, JSON.stringify({
@@ -358,6 +386,29 @@ describe('Client', function() {
         //then
         expect(err).to.not.exist;
         expect(result.terms).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#mlt', function() {
+    it('should get mlt data.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .q({title: 'test'})
+          .mltQuery({
+            fl: ['title', 'text'],
+            mindf: 1,
+            mintf: 1
+          });
+      //when
+      client.mlt(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        expect(result.moreLikeThis).to.exist;
         done();
       });
     });
