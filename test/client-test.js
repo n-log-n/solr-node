@@ -459,7 +459,6 @@ describe('Client', function() {
     it('should request ping.', function(done) {
       //given
       var client = new Client({core: 'test'});
-      var options = { commit: true };
       //when
       client.ping(function(err, result) {
         //then
@@ -469,5 +468,34 @@ describe('Client', function() {
       });
     });
   });
+
+  describe('#commit', function() {
+    it('should request commit.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.commit(function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#softCommit', function() {
+    it('should request softCommit.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.softCommit(function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
 });
 
