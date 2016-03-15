@@ -69,6 +69,17 @@ describe('Client', function() {
         }
       }));
 
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/test\/admin\/ping.*/g, '/test/admin/ping/mock')
+      .get('/test/admin/ping/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 2
+        }
+      }));
+
   });
 
   after(function() {
@@ -436,6 +447,21 @@ describe('Client', function() {
       var options = { commit: true };
       //when
       client.delete(query, options, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#ping', function() {
+    it('should request ping.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var options = { commit: true };
+      //when
+      client.ping(function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.responseHeader).to.exist;
