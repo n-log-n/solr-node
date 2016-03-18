@@ -136,6 +136,18 @@ describe('Query', function() {
     });
   });
 
+  describe('#df', function() {
+    it('should get df params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'title';
+      //when
+      var query = testQuery.df(params);
+      //then
+      expect(query.params).to.eql([ 'df=title' ]);
+    });
+  });
+
   describe('#termsQuery', function() {
     it('should get terms params when params not string and object.', function() {
       //given
@@ -360,6 +372,116 @@ describe('Query', function() {
         'mlt.qf=title'
       ]);
     });
+  });
+
+  describe('#spellcheckQuery', function() {
+    it('should get spellcheck params when params not string and object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.spellcheckQuery(params);
+      //then
+      expect(query.params).to.eql([]);
+    });
+
+    it('should get spellcheck params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'df=text&q=test&spellcheck=true&spellcheck.collateParam.q.op=AND';
+      //when
+      var query = testQuery.spellcheckQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'df=text&q=test&spellcheck=true&spellcheck.collateParam.q.op=AND'
+      ]);
+    });
+
+    it('should get spellcheck params when params is object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: true,
+        q: 'tes',
+        accuracy: 0.5,
+        maxCollations: 5,
+        count: 10
+      };
+      //when
+      var query =
+        testQuery
+          .df('title')
+          .spellcheckQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'df=title',
+        'spellcheck=true',
+        'spellcheck.q=tes',
+        'spellcheck.maxCollations=5',
+        'spellcheck.count=10',
+        'spellcheck.accuracy=0.5'
+      ]);
+    });
+
+    it('should get spellcheck params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.spellcheckQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "spellcheck=false"
+      ]);
+    });
+
+    it('should get spellcheck params when params is other params.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        build: true,
+        collate: true,
+        maxCollations: 5,
+        maxCollationTries: 3,
+        maxCollationEvaluations: 2,
+        collateExtendedResults: true,
+        collateMaxCollectDocs: 5,
+        dictionary: "defaule",
+        extendedResults: true,
+        onlyMorePopular: true,
+        maxResultsForSuggest: 5,
+        alternativeTermCount: 3,
+        reload: true,
+        accuracy: 1.0
+      };
+      //when
+      var query =
+        testQuery
+          .q({title:'test'})
+          .spellcheckQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'q=title:test',
+        'spellcheck=true',
+        'spellcheck.build=true',
+        'spellcheck.collate=true',
+        'spellcheck.maxCollations=5',
+        'spellcheck.maxCollationTries=3',
+        'spellcheck.maxCollationEvaluations=2',
+        'spellcheck.collateExtendedResults=true',
+        'spellcheck.collateMaxCollectDocs=5',
+        'spellcheck.dictionary=defaule',
+        'spellcheck.extendedResults=true',
+        'spellcheck.onlyMorePopular=true',
+        'spellcheck.maxResultsForSuggest=5',
+        'spellcheck.alternativeTermCount=3',
+        'spellcheck.reload=true',
+        'spellcheck.accuracy=1'
+      ]);
+    });
+
   });
 
 });
