@@ -60,12 +60,71 @@ describe('Client', function() {
 
     nock('http://127.0.0.1:8983')
       .persist()
+      .filteringPath(/\/solr\/test\/mlt.*/g, '/test/mlt/mock')
+      .get('/test/mlt/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86
+        },
+        response: {
+          numFound: 10,
+          start: 0,
+          docs: []
+        },
+        moreLikeThis: {
+          "testId1": {
+            numFound: 10,
+            start: 0,
+            docs: []
+          },
+          "testId2": {
+            numFound: 10,
+            start: 0,
+            docs: []
+          }
+        }
+      }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/test\/spell.*/g, '/test/spell/mock')
+      .get('/test/spell/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86
+        },
+        response: {
+          numFound: 10,
+          start: 0,
+          docs: []
+        },
+        spellcheck:{
+          suggestions: [],
+          collations: []
+        }
+      }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
       .filteringPath(/\/solr\/test\/update.*/g, '/test/update/mock')
       .post('/test/update/mock')
       .reply(200, JSON.stringify({
         responseHeader: {
           status: 0,
           QTime: 86
+        }
+      }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
+      .filteringPath(/\/solr\/test\/admin\/ping.*/g, '/test/admin/ping/mock')
+      .get('/test/admin/ping/mock')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 2
         }
       }));
 
@@ -352,6 +411,63 @@ describe('Client', function() {
     });
   });
 
+  describe('#mlt', function() {
+    it('should get mlt data.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .q({title: 'test'})
+          .mltQuery({
+            fl: ['title', 'text'],
+            mindf: 1,
+            mintf: 1
+          });
+      //when
+      client.mlt(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        expect(result.moreLikeThis).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#spell', function() {
+    it('should get spell data.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .df('title')
+          .spellcheckQuery({
+            q: 'tes',
+            build: true,
+            collate: true,
+            maxCollations: 5,
+            maxCollationTries: 3,
+            maxCollationEvaluations: 2,
+            collateExtendedResults: true,
+            collateMaxCollectDocs: 5,
+            dictionary: "defaule",
+            extendedResults: true,
+            onlyMorePopular: true,
+            maxResultsForSuggest: 5,
+            alternativeTermCount: 3,
+            reload: true,
+            accuracy: 1.0
+          });
+      //when
+      client.spell(query, function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.spellcheck).to.exist;
+        done();
+      });
+    });
+  });
+
   describe('#update', function() {
     it('should post data to server without options.', function(done) {
       //given
@@ -443,5 +559,48 @@ describe('Client', function() {
       });
     });
   });
+
+  describe('#ping', function() {
+    it('should request ping.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.ping(function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#commit', function() {
+    it('should request commit.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.commit(function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
+  describe('#softCommit', function() {
+    it('should request softCommit.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client.softCommit(function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.responseHeader).to.exist;
+        done();
+      });
+    });
+  });
+
 });
 
