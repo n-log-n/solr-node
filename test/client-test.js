@@ -29,6 +29,27 @@ describe('Client', function() {
 
     nock('http://127.0.0.1:8983')
       .persist()
+      .get('/solr/test/select?q=text:test&facet=true&facet.query=test&wt=json')
+      .reply(200, JSON.stringify({
+        responseHeader: {
+          status: 0,
+          QTime: 86,
+          params: { q: 'text:test', wt: 'json' }
+        },
+        response:{
+          numFound: 10,
+          start: 0,
+          docs: []
+        },
+        facet_counts:{
+          facet_queries: {
+            test: 18
+          }
+        }
+      }));
+
+    nock('http://127.0.0.1:8983')
+      .persist()
       .filteringPath(/\/solr\/test\/select.*/g, '/test/select/mock')
       .get('/test/select/mock')
       .reply(200, JSON.stringify({
@@ -386,6 +407,30 @@ describe('Client', function() {
 
         expect(err).to.not.exist;
         expect(result.response).to.exist;
+        done();
+      });
+    });
+
+    it('should search data when query and facet query are exist.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .q({text:'test'})
+          .facetQuery({query:'test'});
+
+      //when
+      client.search(query, function(err, result) {
+        //then
+        expect(query.params).to.eql([
+          'q=text:test',
+          'facet=true',
+          'facet.query=test'
+        ]);
+
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
+        expect(result.facet_counts).to.exist;
         done();
       });
     });
