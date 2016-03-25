@@ -171,6 +171,20 @@ describe('Query', function() {
       ]);
     });
 
+    it('should get terms params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.termsQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "terms=false"
+      ]);
+    });
+
     it('should get terms params when params is object.', function() {
       //given
       var testQuery = new Query();
@@ -185,20 +199,6 @@ describe('Query', function() {
         "terms=true",
         "terms.fl=text",
         "terms.prefix=te"
-      ]);
-    });
-
-    it('should get terms params when params is object(on:false).', function() {
-      //given
-      var testQuery = new Query();
-      var params = {
-        on: false
-      };
-      //when
-      var query = testQuery.termsQuery(params);
-      //then
-      expect(query.params).to.eql([
-        "terms=false"
       ]);
     });
 
@@ -278,6 +278,20 @@ describe('Query', function() {
       ]);
     });
 
+    it('should get mlt params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.mltQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "mlt=false"
+      ]);
+    });
+
     it('should get mlt params when params not string and object.', function() {
       //given
       var testQuery = new Query();
@@ -298,20 +312,6 @@ describe('Query', function() {
         'mlt.fl=title,text',
         'mlt.mintf=1',
         'mlt.mindf=1'
-      ]);
-    });
-
-    it('should get mlt params when params is object(on:false).', function() {
-      //given
-      var testQuery = new Query();
-      var params = {
-        on: false
-      };
-      //when
-      var query = testQuery.mltQuery(params);
-      //then
-      expect(query.params).to.eql([
-        "mlt=false"
       ]);
     });
 
@@ -397,6 +397,20 @@ describe('Query', function() {
       ]);
     });
 
+    it('should get spellcheck params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.spellcheckQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "spellcheck=false"
+      ]);
+    });
+
     it('should get spellcheck params when params is object.', function() {
       //given
       var testQuery = new Query();
@@ -420,20 +434,6 @@ describe('Query', function() {
         'spellcheck.maxCollations=5',
         'spellcheck.count=10',
         'spellcheck.accuracy=0.5'
-      ]);
-    });
-
-    it('should get spellcheck params when params is object(on:false).', function() {
-      //given
-      var testQuery = new Query();
-      var params = {
-        on: false
-      };
-      //when
-      var query = testQuery.spellcheckQuery(params);
-      //then
-      expect(query.params).to.eql([
-        "spellcheck=false"
       ]);
     });
 
@@ -481,7 +481,98 @@ describe('Query', function() {
         'spellcheck.accuracy=1'
       ]);
     });
+  });
 
+
+  describe('#facetQuery', function() {
+    it('should get facet params when params not string and object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.facetQuery(params);
+      //then
+      expect(query.params).to.eql([]);
+    });
+
+    it('should get facet params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'q=test&rows=0&facet=true&facet.limit=-1&facet.field=title&facet.field=subTitle';
+      //when
+      var query = testQuery.facetQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'q=test&rows=0&facet=true&facet.limit=-1&facet.field=title&facet.field=subTitle'
+      ]);
+    });
+
+    it('should get facet params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.facetQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "facet=false"
+      ]);
+    });
+
+    it('should get facet params when params is object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: true,
+        query: 'test',
+        field: 'title',
+        prefix: 'test',
+        contains:'tes',
+        containsIgnoreCase: 'not',
+        sort: 'count',
+        limit: 10,
+        offset: 10,
+        mincount: 1
+      };
+      //when
+      var query = testQuery.facetQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'facet=true',
+        'facet.query=test',
+        'facet.field=title',
+        'facet.prefix=test',
+        'facet.contains=tes',
+        'facet.contains.ignoreCase=not',
+        'facet.sort=count',
+        'facet.limit=10',
+        'facet.offset=10',
+        'facet.mincount=1'
+      ]);
+    });
+
+    it('should get facet params when other params is object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        query: 'test',
+        field: ['title','text'],
+        missing: true,
+        method: 'enum'
+      };
+      //when
+      var query = testQuery.facetQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'facet=true',
+        'facet.query=test',
+        'facet.field=title,text',
+        'facet.missing=true',
+        'facet.method=enum'
+      ]);
+    });
   });
 
 });
