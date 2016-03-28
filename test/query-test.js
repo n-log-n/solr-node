@@ -39,7 +39,7 @@ describe('Query', function() {
       //when
       var query = testQuery.q(params);
       //then
-      expect(query.params).to.eql([ 'q=text:test' ]);
+      expect(query.params).to.eql([ 'q=text%3Atest' ]);
     });
 
     it('should get query params when params is object.', function() {
@@ -52,7 +52,7 @@ describe('Query', function() {
       //when
       var query = testQuery.q(params);
       //then
-      expect(query.params).to.eql([ 'q=text:test AND title:test' ]);
+      expect(query.params).to.eql([ 'q=text:test%20AND%20title:test' ]);
     });
   });
 
