@@ -397,7 +397,7 @@ describe('Client', function() {
       client.search(query, function(err, result) {
         //then
         expect(query.params).to.eql([
-          'q=text:test AND title:test',
+          'q=text:test%20AND%20title:test',
           'fl=text,title',
           'start=0',
           'rows=10',
