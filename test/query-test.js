@@ -483,7 +483,6 @@ describe('Query', function() {
     });
   });
 
-
   describe('#facetQuery', function() {
     it('should get facet params when params not string and object.', function() {
       //given
@@ -571,6 +570,113 @@ describe('Query', function() {
         'facet.field=title,text',
         'facet.missing=true',
         'facet.method=enum'
+      ]);
+    });
+  });
+
+
+  describe('#groupQuery', function() {
+    it('should get group params when params not string and object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.groupQuery(params);
+      //then
+      expect(query.params).to.eql([]);
+    });
+
+    it('should get group params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'q=test&rows=0&group=true&group.field=title';
+      //when
+      var query = testQuery.groupQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'q=test&rows=0&group=true&group.field=title'
+      ]);
+    });
+
+    it('should get group params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.groupQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "group=false"
+      ]);
+    });
+
+    it('should get group params when on:true, query:test, ... , format:simple.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: true,
+        field: 'title',
+        query: 'test',
+        limit: 10,
+        offset: 0,
+        sort: 'score desc',
+        format: 'simple'
+      };
+      //when
+      var query = testQuery.groupQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'group=true',
+        'group.field=title',
+        'group.query=test',
+        'group.limit=10',
+        'group.offset=0',
+        'group.sort=score desc',
+        'group.format=simple'
+      ]);
+    });
+
+    it('should get group params when field:title, main:true, ... , cachePercent:20.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        field: 'title',
+        main: true,
+        format: 'simple',
+        ngroups: true,
+        truncate: true,
+        cachePercent: 20
+      };
+      //when
+      var query = testQuery.groupQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'group=true',
+        'group.field=title',
+        'group.format=simple',
+        'group.main=true',
+        'group.ngroups=true',
+        'group.truncate=true',
+        'group.cache.percent=20'
+      ]);
+    });
+
+    it('should get group params when field:title, facet:true.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        field: 'title',
+        facet: true
+      };
+      //when
+      var query = testQuery.groupQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'group=true',
+        'group.field=title',
+        'group.facet=true'
       ]);
     });
   });
