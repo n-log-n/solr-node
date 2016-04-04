@@ -10,3 +10,8 @@
 ### 0.1.1
     * Support facet
     * Fix #23 (When query is object, make invalid url.)
+
+### 0.1.2
+    * Fix #25 (requestPost url bug)
+    
+    
