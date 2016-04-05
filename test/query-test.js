@@ -574,7 +574,6 @@ describe('Query', function() {
     });
   });
 
-
   describe('#groupQuery', function() {
     it('should get group params when params not string and object.', function() {
       //given
@@ -677,6 +676,136 @@ describe('Query', function() {
         'group=true',
         'group.field=title',
         'group.facet=true'
+      ]);
+    });
+  });
+
+  describe('#hlQuery', function() {
+    it('should get hl params when params not string and object.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.hlQuery(params);
+      //then
+      expect(query.params).to.eql([]);
+    });
+
+    it('should get hl params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'q=title:test&hl=true&hl.fl=title';
+      //when
+      var query = testQuery.hlQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'q=title:test&hl=true&hl.fl=title'
+      ]);
+    });
+
+    it('should get hl params when params is object(on:false).', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: false
+      };
+      //when
+      var query = testQuery.hlQuery(params);
+      //then
+      expect(query.params).to.eql([
+        "hl=false"
+      ]);
+    });
+
+    it('should get group params when on:true, q:title:text, ... , snippets:1.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        on: true,
+        q: 'title:text',
+        qparser: 'defType',
+        fl: ['title', 'content'],
+        snippets: 1
+      };
+      //when
+      var query = testQuery.hlQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'hl=true',
+        'hl.q=title:text',
+        'hl.qparser=defType',
+        'hl.fl=title,content',
+        'hl.snippets=1'
+      ]);
+    });
+
+    it('should get group params when q:title:text, fl:title ... , fragmenter:gap.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        q: 'title:text',
+        fl: 'title',
+        fragsize: 100,
+        mergeContiguous: false,
+        requireFieldMatch: false,
+        maxAnalyzedChars: 10000,
+        maxMultiValuedToExamine: 10000,
+        maxMultiValuedToMatch: 10000,
+        alternateField: 'content',
+        maxAlternateFieldLength: 10000,
+        formatter: 'simple',
+        simplePre: '<em>',
+        simplePost: '</em>',
+        fragmenter: 'gap'
+      };
+      //when
+      var query = testQuery.hlQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'hl=true',
+        'hl.q=title:text',
+        'hl.fl=title',
+        'hl.fragsize=100',
+        'hl.mergeContiguous=false',
+        'hl.requireFieldMatch=false',
+        'hl.maxAnalyzedChars=10000',
+        'hl.maxMultiValuedToExamine=10000',
+        'hl.maxMultiValuedToMatch=10000',
+        'hl.alternateField=content',
+        'hl.maxAlternateFieldLength=10000',
+        'hl.formatter=simple',
+        'hl.simple.pre=<em>',
+        'hl.simple.post=</em>',
+        'hl.fragmenter=gap'
+      ]);
+    });
+
+    it('should get group params when q:title:text, fl:title, ... , preserveMulti:false.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        q: 'title:text',
+        fl: 'title',
+        usePhraseHighlighter: true,
+        highlightMultiTerm: true,
+        regexSlop: 0.6,
+        regexPattern: /[0-9]/,
+        regexMaxAnalyzedChars: 1000,
+        preserveMulti: false
+      };
+      //when
+      var query = testQuery.hlQuery(params);
+      //then
+      expect(query.params).to.eql([
+        'hl=true',
+        'hl.q=title:text',
+        'hl.fl=title',
+        'hl.usePhraseHighlighter=true',
+        'hl.highlightMultiTerm=true',
+        'hl.regex.slop=0.6',
+        'hl.regex.pattern=/[0-9]/',
+        'hl.regex.maxAnalyzedChars=1000',
+        'hl.preserveMulti=false'
       ]);
     });
   });
