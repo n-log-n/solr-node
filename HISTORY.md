@@ -14,4 +14,5 @@
 ### 0.1.2
     * Fix #25 (requestPost url bug)
     * Support group
+    * Support hl
     
