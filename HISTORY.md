@@ -21,6 +21,9 @@
    
 ### 1.0.0
     * Fix #33 (Fix comments)
-    * Support #34 (Add error exception)
+    * Update #34 (Add error exception)
+    * Support #35 (wt)
+    * Update #38 (Add test case)
+    * Update #40 (Update client.js) 
      
     
