@@ -12,12 +12,13 @@ npm install solr-node
 
 ## Usage
 
+### Create Client
 ```js
 // Require module
 var SolrNode = require('solr-node');
 
 // Create client
-var client = SolrNode({
+var client = new SolrNode({
     host: '127.0.0.1',
     port: '8983',
     core: 'test',
@@ -31,6 +32,7 @@ var client = SolrNode({
 // Create query
 var strQuery = client.query().q('text:test');
 var objQuery = client.query().q({text:'test', title:'test'});
+var myStrQuery = 'q=text:test&wt=json';
 
 // Search documents using strQuery
 solrClient.search(strQuery, function (err, result) {
@@ -43,6 +45,15 @@ solrClient.search(strQuery, function (err, result) {
 
 // Search documents using objQuery
 solrClient.search(objQuery, function (err, result) {
+   if (err) {
+      console.log(err);
+      return;
+   }
+   console.log('Response:', result.response);
+});
+
+// Search documents using myStrQuery
+solrClient.search(myStrQuery, function (err, result) {
    if (err) {
       console.log(err);
       return;
