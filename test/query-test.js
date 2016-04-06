@@ -158,6 +158,18 @@ describe('Query', function() {
     });
   });
 
+  describe('#wt', function() {
+    it('should get wt params when params is string.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'json';
+      //when
+      var query = testQuery.wt(params);
+      //then
+      expect(query.params).to.eql([ 'wt=json' ]);
+    });
+  });
+
   describe('#termsQuery', function() {
     it('should get terms params when params not string and object.', function() {
       //given
