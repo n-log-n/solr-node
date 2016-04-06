@@ -134,6 +134,16 @@ describe('Query', function() {
       //then
       expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
     });
+
+    it('should get invalid params when invalid params.', function() {
+      //given
+      var testQuery = new Query();
+      var params = [{key:'like', value:10}, {field:'hate', value:10}];
+      //when
+      var query = testQuery.fq(params);
+      //then
+      expect(query.params).to.eql([ 'fq=undefined:10', 'fq=hate:10' ]);
+    });
   });
 
   describe('#df', function() {

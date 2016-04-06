@@ -18,4 +18,9 @@
     
 ### 0.1.3
     * Fix #30 ("&wt=json" don't need when query is String.)
+   
+### 1.0.0
+    * Fix #33 (Fix comments)
+    * Support #34 (Add error exception)
+     
     
