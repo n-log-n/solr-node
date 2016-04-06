@@ -76,6 +76,16 @@ describe('Query', function() {
       //then
       expect(query.params).to.eql([ 'fl=text,title' ]);
     });
+
+    it('should get empty when params is null.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.fl(params);
+      //then
+      expect(query.params).to.eql([]);
+    });
   });
 
   describe('#start', function() {
@@ -135,7 +145,7 @@ describe('Query', function() {
       expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
     });
 
-    it('should get invalid params when invalid params.', function() {
+    it('should get invalid params when invalid key.', function() {
       //given
       var testQuery = new Query();
       var params = [{key:'like', value:10}, {field:'hate', value:10}];
@@ -143,6 +153,16 @@ describe('Query', function() {
       var query = testQuery.fq(params);
       //then
       expect(query.params).to.eql([ 'fq=undefined:10', 'fq=hate:10' ]);
+    });
+
+    it('should get empty params when params is null.', function() {
+      //given
+      var testQuery = new Query();
+      var params = null;
+      //when
+      var query = testQuery.fq(params);
+      //then
+      expect(query.params).to.eql([]);
     });
   });
 
@@ -829,6 +849,26 @@ describe('Query', function() {
         'hl.regex.maxAnalyzedChars=1000',
         'hl.preserveMulti=false'
       ]);
+    });
+  });
+
+  describe('#toString', function() {
+    it('should get query string when params is q.', function() {
+      //given
+      var testQuery = new Query();
+      //when
+      var queryString = testQuery.q({text: 'test'}).toString();
+      //then
+      expect(queryString).to.equal('q=text:test&wt=json');
+    });
+
+    it('should get query string when params is q and wt.', function() {
+      //given
+      var testQuery = new Query();
+      //when
+      var queryString = testQuery.q({text: 'test'}).wt('json').toString();
+      //then
+      expect(queryString).to.equal('q=text:test&wt=json');
     });
   });
 
