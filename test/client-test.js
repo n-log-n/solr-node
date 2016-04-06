@@ -213,15 +213,27 @@ describe('Client', function() {
     });
   });
 
-  describe('#requestGet', function() {
+  describe('#_requestGet', function() {
     it('should get search error from server.', function(done) {
       //given
       var client = new Client({core: 'error'});
       //when
-      client.requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
+      client._requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
         //then
         expect(err).to.equal('Solr server error: 404');
         expect(result).to.not.exist;
+        done();
+      });
+    });
+
+    it('should get notes data from server when query string.', function(done) {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      client._requestGet(client.SEARCH_PATH, 'q=text:text&wt=json', function(err, result) {
+        //then
+        expect(err).to.not.exist;
+        expect(result.response).to.exist;
         done();
       });
     });
@@ -231,7 +243,7 @@ describe('Client', function() {
       var client = new Client({core: 'test'});
       var query = client.query().q('text:test');
       //when
-      client.requestGet(client.SEARCH_PATH, query, function(err, result) {
+      client._requestGet(client.SEARCH_PATH, query, function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.response).to.exist;
@@ -244,7 +256,7 @@ describe('Client', function() {
       var client = new Client({core: 'test'});
       var query = client.query().q(null);
       //when
-      client.requestGet(client.SEARCH_PATH, query, function(err, result) {
+      client._requestGet(client.SEARCH_PATH, query, function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.response).to.exist;
@@ -256,7 +268,7 @@ describe('Client', function() {
       //given
       var client = new Client({core: 'test'});
       //when
-      client.requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
+      client._requestGet(client.SEARCH_PATH, "q=*:*", function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.response).to.exist;
@@ -268,7 +280,7 @@ describe('Client', function() {
       //given
       var client = new Client({core: 'test'});
       //when
-      client.requestGet(client.SEARCH_PATH, null, function(err, result) {
+      client._requestGet(client.SEARCH_PATH, null, function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.response).to.exist;
@@ -277,12 +289,12 @@ describe('Client', function() {
     });
   });
 
-  describe('#requestPost', function() {
+  describe('#_requestPost', function() {
     it('should get post error from server.', function(done) {
       //given
       var client = new Client({core: 'error'});
       //when
-      client.requestPost(client.UPDATE_PATH, {}, {}, function(err, result) {
+      client._requestPost(client.UPDATE_PATH, {}, {}, function(err, result) {
         //then
         expect(err).to.equal('Solr server error: 404');
         expect(result).to.not.exist;
@@ -299,7 +311,7 @@ describe('Client', function() {
       };
       var options = null;
       //when
-      client.requestPost(client.UPDATE_PATH, data, options, function(err, result) {
+      client._requestPost(client.UPDATE_PATH, data, options, function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.responseHeader).to.exist;
@@ -315,7 +327,7 @@ describe('Client', function() {
         title: 'test'
       };
       //when
-      client.requestPost(client.UPDATE_PATH, data, {}, function(err, result) {
+      client._requestPost(client.UPDATE_PATH, data, {}, function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.responseHeader).to.exist;
@@ -331,7 +343,7 @@ describe('Client', function() {
         title: 'test'
       };
       //when
-      client.requestPost(client.UPDATE_PATH, data, 'commit=true', function(err, result) {
+      client._requestPost(client.UPDATE_PATH, data, 'commit=true', function(err, result) {
         //then
         expect(err).to.not.exist;
         expect(result.responseHeader).to.exist;
