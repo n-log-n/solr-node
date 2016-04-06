@@ -16,3 +16,6 @@
     * Support group
     * Support hl
     
+### 0.1.3
+    * Fix #30 ("&wt=json" don't need when query is String.)
+    
