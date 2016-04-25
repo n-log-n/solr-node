@@ -26,4 +26,8 @@
     * Update #38 (Add test case)
     * Update #40 (Update client.js) 
      
-    
+### 1.0.1
+    * Add docs
+    * Add docs generator (gulp doc)
+   
+     

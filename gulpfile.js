@@ -2,7 +2,9 @@ var gulp = require('gulp'),
   istanbul = require('gulp-istanbul'),
   jshint = require('gulp-jshint'),
   stylish = require('jshint-stylish'),
-  mocha = require('gulp-mocha');
+  mocha = require('gulp-mocha'),
+  jsdoc = require('gulp-jsdoc3');
+
 
 gulp.task('lint', function() {
   return gulp.src('./lib/**/*.js')
@@ -27,4 +29,9 @@ gulp.task('test', ['pre-test'], function() {
     .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
 });
 
-gulp.task('default', ['lint', 'test']);
+gulp.task('doc', function (cb) {
+  gulp.src(['./lib/**/*.js'], {read: false})
+    .pipe(jsdoc(cb));
+});
+
+gulp.task('default', ['lint', 'test', 'doc']);
