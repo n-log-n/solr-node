@@ -11,6 +11,8 @@ npm install solr-node
 
 
 ## Usage
+- Client: http://www.godong9.com/solrnode/Client.html
+- Query: http://www.godong9.com/solrnode/Query.html
 
 ### Create Client
 ```js
