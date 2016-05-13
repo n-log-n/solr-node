@@ -17,17 +17,6 @@ describe('Query', function() {
       //then
       expect(testQuery.params).to.eql([]);
     });
-
-    it('should set logger query.', function() {
-      //given
-      var options = {
-        setDebugLevel: 'ALL'
-      };
-      //when
-      var testQuery = new Query(options);
-      //then
-      expect(testQuery.params).to.eql([]);
-    });
   });
 
   describe('#dismax', function() {
