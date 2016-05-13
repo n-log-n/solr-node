@@ -9,6 +9,16 @@ var expect = require('chai').expect,
   Query = require('../lib/query');
 
 describe('Query', function() {
+  describe('#constructor', function() {
+    it('should create default query.', function() {
+      //given
+      //when
+      var testQuery = new Query();
+      //then
+      expect(testQuery.params).to.eql([]);
+    });
+  });
+
   describe('#dismax', function() {
     it('should get dismax params.', function() {
       //given

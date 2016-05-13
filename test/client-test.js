@@ -174,7 +174,8 @@ describe('Client', function() {
     it('should create client when core:"test".', function() {
       //given
       var options = {
-        core: 'test'
+        core: 'test',
+        setDebugLevel: 'ALL'
       };
       //when
       var client = new Client(options);
