@@ -175,7 +175,7 @@ describe('Client', function() {
       //given
       var options = {
         core: 'test',
-        setDebugLevel: 'ALL'
+        debugLevel: 'ALL'
       };
       //when
       var client = new Client(options);

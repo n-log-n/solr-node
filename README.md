@@ -26,6 +26,15 @@ var client = new SolrNode({
     core: 'test',
     protocol: 'http'
 });
+
+// Set Debug Level
+var client = new SolrNode({
+    host: '127.0.0.1',
+    port: '8983',
+    core: 'test',
+    protocol: 'http',
+    debugLevel: 'ERROR' // log4js debug level paramter
+});
 ```
 
 ### Search
