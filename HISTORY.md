@@ -30,4 +30,8 @@
     * Add docs
     * Add docs generator (gulp doc)
    
-     
+### 1.0.2
+    * Support set debug level (#45)
+
+### 1.0.3
+    * 
