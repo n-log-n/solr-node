@@ -34,4 +34,4 @@
     * Support set debug level (#45)
 
 ### 1.0.3
-    * 
+    * Support #47
