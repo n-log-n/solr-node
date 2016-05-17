@@ -232,6 +232,26 @@ describe('Query', function() {
     });
   });
 
+  describe('#addParams', function() {
+    it('should add params.', function() {
+      //given
+      var testQuery = new Query();
+      var params = [
+        { field: 'sfield', value: 'loc' },
+        { field: 'pt', value: '37.547184,126.972176' },
+        { field: 'd', value: '10' }
+      ];
+      //when
+      var query = testQuery.addParams(params);
+      //then
+      expect(query.params).to.eql([
+        'sfield=loc',
+        'pt=37.547184%2C126.972176',
+        'd=10'
+      ]);
+    });
+  });
+
   describe('#termsQuery', function() {
     it('should get terms params when params not string and object.', function() {
       //given
