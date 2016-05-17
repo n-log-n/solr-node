@@ -134,6 +134,28 @@ describe('Query', function() {
     });
   });
 
+  describe('#_getFqStr', function() {
+    it('should get fqStr when field exist.', function() {
+      //given
+      var testQuery = new Query();
+      var param = {field:'like', value:10};
+      //when
+      var fqStr = testQuery._getFqStr(param);
+      //then
+      expect(fqStr).to.equal("fq=like:10");
+    });
+
+    it('should get fqStr when field not exist.', function() {
+      //given
+      var testQuery = new Query();
+      var param = {value:'like:10'};
+      //when
+      var fqStr = testQuery._getFqStr(param);
+      //then
+      expect(fqStr).to.equal("fq=like:10");
+    });
+  });
+
   describe('#fq', function() {
     it('should get fq params when params is object.', function() {
       //given
@@ -155,6 +177,16 @@ describe('Query', function() {
       expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
     });
 
+    it('should get fq params when field not exist.', function() {
+      //given
+      var testQuery = new Query();
+      var params = [{value:'like:10'}, {field:'hate', value:10}];
+      //when
+      var query = testQuery.fq(params);
+      //then
+      expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
+    });
+
     it('should get invalid params when invalid key.', function() {
       //given
       var testQuery = new Query();
@@ -162,7 +194,7 @@ describe('Query', function() {
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ 'fq=undefined:10', 'fq=hate:10' ]);
+      expect(query.params).to.eql([ 'fq=10', 'fq=hate:10' ]);
     });
 
     it('should get empty params when params is null.', function() {
