@@ -130,7 +130,7 @@ describe('Query', function() {
       //when
       var query = testQuery.sort(params);
       //then
-      expect(query.params).to.eql([ 'sort=score desc,like desc' ]);
+      expect(query.params).to.eql([ 'sort=score%20desc,like%20desc' ]);
     });
   });
 
@@ -142,7 +142,7 @@ describe('Query', function() {
       //when
       var fqStr = testQuery._getFqStr(param);
       //then
-      expect(fqStr).to.equal("fq=like:10");
+      expect(fqStr).to.equal("fq=like%3A10");
     });
 
     it('should get fqStr when field not exist.', function() {
@@ -152,7 +152,7 @@ describe('Query', function() {
       //when
       var fqStr = testQuery._getFqStr(param);
       //then
-      expect(fqStr).to.equal("fq=like:10");
+      expect(fqStr).to.equal("fq=like%3A10");
     });
   });
 
@@ -164,7 +164,7 @@ describe('Query', function() {
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ "fq=loc:IsWithin(POLYGON((129.3100483 34.9835815,129.3100483 35.3874414,128.787197 35.3874414,128.787197 34.9835815,129.3100483 34.9835815))) distErrPct=0" ]);
+      expect(query.params).to.eql([ "fq=loc%3AIsWithin(POLYGON((129.3100483%2034.9835815%2C129.3100483%2035.3874414%2C128.787197%2035.3874414%2C128.787197%2034.9835815%2C129.3100483%2034.9835815)))%20distErrPct%3D0" ]);
     });
 
     it('should get fq params when params is object.', function() {
@@ -174,7 +174,7 @@ describe('Query', function() {
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
+      expect(query.params).to.eql([ 'fq=like%3A10', 'fq=hate%3A10' ]);
     });
 
     it('should get fq params when field not exist.', function() {
@@ -184,7 +184,7 @@ describe('Query', function() {
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ 'fq=like:10', 'fq=hate:10' ]);
+      expect(query.params).to.eql([ 'fq=like%3A10', 'fq=hate%3A10' ]);
     });
 
     it('should get invalid params when invalid key.', function() {
@@ -194,7 +194,7 @@ describe('Query', function() {
       //when
       var query = testQuery.fq(params);
       //then
-      expect(query.params).to.eql([ 'fq=10', 'fq=hate:10' ]);
+      expect(query.params).to.eql([ 'fq=10', 'fq=hate%3A10' ]);
     });
 
     it('should get empty params when params is null.', function() {

@@ -414,8 +414,8 @@ describe('Client', function() {
           'fl=text,title',
           'start=0',
           'rows=10',
-          'sort=like desc',
-          'fq=hate:0'
+          'sort=like%20desc',
+          'fq=hate%3A0'
         ]);
 
         expect(err).to.not.exist;
