@@ -78,6 +78,18 @@ describe('Query', function() {
       //then
       expect(query.params).to.eql([ "q=text:test%20AND%20title:test%20AND%20(name%3Atest%20OR%20category%3Atest)" ]);
     });
+
+    it('should get query params when params is object and params.str is only exist.', function() {
+      //given
+      var testQuery = new Query();
+      var params = {
+        str: '(name:test OR category:test)'
+      };
+      //when
+      var query = testQuery.q(params);
+      //then
+      expect(query.params).to.eql([ "q=(name%3Atest%20OR%20category%3Atest)" ]);
+    });
   });
 
   describe('#fl', function() {
