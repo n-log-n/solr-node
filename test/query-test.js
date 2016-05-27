@@ -92,6 +92,18 @@ describe('Query', function() {
     });
   });
 
+  describe('#qop', function() {
+    it('should get q.op params when params is AND.', function() {
+      //given
+      var testQuery = new Query();
+      var params = 'AND';
+      //when
+      var query = testQuery.qop(params);
+      //then
+      expect(query.params).to.eql([ 'q.op=AND' ]);
+    });
+  });
+
   describe('#fl', function() {
     it('should get fl params when params is string.', function() {
       //given
