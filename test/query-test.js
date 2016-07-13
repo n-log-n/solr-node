@@ -709,7 +709,7 @@ describe('Query', function() {
       expect(query.params).to.eql([
         'facet=true',
         'facet.query=test',
-        'facet.field=title,text',
+        'facet.field=title&facet.field=text',
         'facet.missing=true',
         'facet.method=enum'
       ]);
