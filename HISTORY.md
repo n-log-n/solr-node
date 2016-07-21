@@ -59,3 +59,6 @@
     
 ### 1.0.11
     * Fix client
+    
+### 1.0.12
+    * Fix client
