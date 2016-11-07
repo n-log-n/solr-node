@@ -66,10 +66,63 @@
     port<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>8983<span class="pl-pds">'</span></span>,
     core<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>,
     protocol<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>
+});
+
+<span class="pl-c">// Set Debug Level</span>
+<span class="pl-k">var</span> client <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">SolrNode</span>({
+    host<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>127.0.0.1<span class="pl-pds">'</span></span>,
+    port<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>8983<span class="pl-pds">'</span></span>,
+    core<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>test<span class="pl-pds">'</span></span>,
+    protocol<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>,
+    debugLevel<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>ERROR<span class="pl-pds">'</span></span> <span class="pl-c">// log4js debug level paramter</span>
 });</pre></div>
 
 <h3>
 <a id="search" class="anchor" href="#search" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Search</h3>
+
+<p>Search can be executed with a simple text query or an object query.</p>
+
+<h4>
+<a id="text" class="anchor" href="#text" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Text</h4>
+
+<p>Text queries are similar to what one would find on the SOLR Core UI, EX:</p>
+
+<p>From the URL: <code>http://localhost:8080/solr/products/select?q=*%3A*&amp;wt=json</code></p>
+
+<p>The Query would be:</p>
+
+<pre><code>*:*&amp;wt=json
+</code></pre>
+
+<p>NOTE: url decoded ':' from <code>%3A</code>.</p>
+
+<h4>
+<a id="object" class="anchor" href="#object" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Object</h4>
+
+<p>Object based queries can be simple or complex using chaining. Each method of the Query object returns an instance of itself.</p>
+
+<p>Examples:</p>
+
+<p>Simple:</p>
+
+<pre><code>client.query().q({text:'test', title:'test'});
+</code></pre>
+
+<p>Complex and chained:</p>
+
+<pre><code>client.query()
+    .q({text:'test', title:'test'})
+    .addParams({
+        wt: 'json',
+        indent: true
+    })
+    .start(1)
+    .rows(1)
+;
+</code></pre>
+
+<h3>
+<a id="query-examples" class="anchor" href="#query-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Query Examples</h3>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-c">// Create query</span>
 <span class="pl-k">var</span> strQuery <span class="pl-k">=</span> <span class="pl-smi">client</span>.<span class="pl-en">query</span>().<span class="pl-en">q</span>(<span class="pl-s"><span class="pl-pds">'</span>text:test<span class="pl-pds">'</span></span>);
@@ -131,7 +184,7 @@
 <span class="pl-k">var</span> objQuery <span class="pl-k">=</span> {id<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>testid<span class="pl-pds">'</span></span>}
 
 <span class="pl-c">// Delete document using strQuery</span>
-<span class="pl-smi">client</span>.<span class="pl-en">delete</span>(strQuery, <span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">result</span>) {
+<span class="pl-smi">client</span>.<span class="pl-c1">delete</span>(strQuery, <span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">result</span>) {
    <span class="pl-k">if</span> (err) {
       <span class="pl-en">console</span>.<span class="pl-c1">log</span>(err);
       <span class="pl-k">return</span>;
@@ -140,7 +193,7 @@
 });
 
 <span class="pl-c">// Delete document using objQuery</span>
-<span class="pl-smi">client</span>.<span class="pl-en">delete</span>(objQuery, <span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">result</span>) {
+<span class="pl-smi">client</span>.<span class="pl-c1">delete</span>(objQuery, <span class="pl-k">function</span>(<span class="pl-smi">err</span>, <span class="pl-smi">result</span>) {
    <span class="pl-k">if</span> (err) {
       <span class="pl-en">console</span>.<span class="pl-c1">log</span>(err);
       <span class="pl-k">return</span>;
@@ -152,7 +205,7 @@
 <h2>
 <a id="test--coverage--docs" class="anchor" href="#test--coverage--docs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Test &amp; Coverage &amp; Docs</h2>
 
-<div class="highlight highlight-source-js"><pre>gulp </pre></div>
+<div class="highlight highlight-source-js"><pre>gulp</pre></div>
       </section>
     </div>
 
