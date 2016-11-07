@@ -1,4 +1,5 @@
 # solr-node
+
 Simple Solr Node Client Project
 
 [![NPM](https://nodei.co/npm/solr-node.png?downloads=true&stars=true)](https://nodei.co/npm/solr-node/)
@@ -9,12 +10,12 @@ Simple Solr Node Client Project
 npm install solr-node
 ```
 
-
 ## Usage
 - Client: http://www.godong9.com/solrnode/Client.html
 - Query: http://www.godong9.com/solrnode/Query.html
 
 ### Create Client
+
 ```js
 // Require module
 var SolrNode = require('solr-node');
@@ -38,6 +39,50 @@ var client = new SolrNode({
 ```
 
 ### Search
+
+Search can be executed with a simple text query or an object query.
+
+#### Text
+
+Text queries are similar to what one would find on the SOLR Core UI, EX:
+
+From the URL: `http://localhost:8080/solr/products/select?q=*%3A*&wt=json`
+
+The Query would be:
+
+```
+*:*&wt=json
+```
+
+NOTE: url decoded ':' from `%3A`.
+
+#### Object
+
+Object based queries can be simple or complex using chaining. Each method of the Query object returns an instance of itself.
+
+Examples:
+
+Simple:
+
+```
+client.query().q({text:'test', title:'test'});
+```
+
+Complex and chained:
+
+```
+client.query()
+    .q({text:'test', title:'test'})
+    .addParams({
+        wt: 'json',
+        indent: true
+    })
+    .start(1)
+    .rows(1)
+;
+```
+
+### Query Examples
 
 ```js
 // Create query
@@ -124,5 +169,5 @@ client.delete(objQuery, function(err, result) {
 ## Test & Coverage & Docs
 
 ```js
-gulp 
+gulp
 ```
