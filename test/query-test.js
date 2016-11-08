@@ -176,12 +176,13 @@ describe('Query', function() {
     it('should get spatial params.', function() {
       var testQuery = new Query();
       testQuery.spatial({
+        on: true,
         pt: '33.9609853,-118.3383601',
         sfield: 'latlong',
         d: '50'
       });
 
-      expect(testQuery.params).to.eql([ 'spatial=true', "pt=33.9609853%2C-118.3383601", 'sfield=latlong', 'd=50' ]);
+      expect(testQuery.params).to.eql([ 'spatial=true', "pt=33.9609853,-118.3383601", 'sfield=latlong', 'd=50' ]);
     });
   });
 
