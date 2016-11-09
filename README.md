@@ -168,6 +168,6 @@ client.delete(objQuery, function(err, result) {
 
 ## Test & Coverage & Docs
 
-```js
+```
 gulp
 ```
