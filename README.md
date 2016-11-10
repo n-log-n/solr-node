@@ -4,6 +4,9 @@ Simple Solr Node Client Project
 
 [![NPM](https://nodei.co/npm/solr-node.png?downloads=true&stars=true)](https://nodei.co/npm/solr-node/)
 
+[![codecov](https://codecov.io/gh/godong9/solr-node/branch/master/graph/badge.svg)](https://codecov.io/gh/godong9/solr-node)
+
+
 ## Install
 
 ```
