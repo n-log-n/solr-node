@@ -6,6 +6,8 @@ Simple Solr Node Client Project
 
 [![codecov](https://codecov.io/gh/godong9/solr-node/branch/master/graph/badge.svg)](https://codecov.io/gh/godong9/solr-node)
 [![bitHound Dependencies](https://www.bithound.io/github/godong9/solr-node/badges/dependencies.svg)](https://www.bithound.io/github/godong9/solr-node/master/dependencies/npm)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 ## Install
 
