@@ -1,13 +1,16 @@
 /**
  * Created by godong on 2016. 3. 9..
  */
-
 /**
  * Require modules
  */
-var expect = require('chai').expect,
+var chai = require('chai'),
+  chaiAsPromised = require("chai-as-promised"),
   nock = require('nock'),
   Client = require('../lib/client');
+
+chai.use(chaiAsPromised);
+var expect = chai.expect;
 
 describe('Client', function() {
   var testClient = new Client({core: 'test'});
@@ -288,6 +291,42 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should return a Promise when no callback is given', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client._requestGet(client.SEARCH_PATH, null);
+      //then
+      return expect(result).to.be.a('promise');
+    });
+
+    it('should not return a Promise when a callback is given', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client._requestGet(client.SEARCH_PATH, null, function(){});
+      //then
+      return expect(result).to.be.undefined;
+    });
+
+    it('should resolve with the data when it returns a Promise', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client._requestGet(client.SEARCH_PATH, null);
+      //then
+      return expect(result).to.eventually.have.property('response');
+    });
+
+    it('should reject with error message when it returns a Promise', function() {
+      //given
+      var client = new Client({core: 'error'});
+      //when
+      var result = client._requestGet(client.SEARCH_PATH, null);
+      //then
+      return expect(result).to.be.rejectedWith('Solr server error: 404');
+    });
   });
 
   describe('#_requestPost', function() {
@@ -447,6 +486,51 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should return a Promise when no callback is given', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var query =
+        client.query()
+          .q({text:'test'})
+          .facetQuery({query:'test'});
+
+      var result = client.search(query);
+      //then
+      return expect(result).to.be.a('promise');
+    });
+
+    it('should not return a Promise when a callback is given', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var query =
+        client.query()
+          .q({text:'test'})
+          .facetQuery({query:'test'});
+      var result = client.search(query, function() {});
+      //then
+      return expect(result).to.be.undefined;
+    });
+
+    it('should resolve with the data when it returns a Promise', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client.search('q=text:test');
+      //then
+      return expect(result).to.eventually.have.property('response');
+    });
+
+    it('should reject with error message when it returns a Promise', function() {
+      //given
+      var client = new Client({core: 'error'});
+      //when
+      var result = client.search('q=text:test');
+      //then
+      return expect(result).to.be.rejected;
+    });
   });
 
   describe('#terms', function() {
@@ -466,6 +550,21 @@ describe('Client', function() {
         expect(result.terms).to.exist;
         done();
       });
+    });
+
+    it('should resolve with the terms data when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var query =
+        client.query()
+          .termsQuery({
+            fl: 'text',
+            prefix: 'te'
+          });
+      var result = client.terms(query);
+      //then
+      return expect(result).to.eventually.have.property('terms');
     });
   });
 
@@ -489,6 +588,23 @@ describe('Client', function() {
         expect(result.moreLikeThis).to.exist;
         done();
       });
+    });
+
+    it('should resolve with the mlt data when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .q({title: 'test'})
+          .mltQuery({
+            fl: ['title', 'text'],
+            mindf: 1,
+            mintf: 1
+          });
+      //when
+      var result = client.mlt(query);
+      //then
+      return expect(result).to.eventually.have.property('moreLikeThis');
     });
   });
 
@@ -524,6 +640,35 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should resolve with the spell data when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      var query =
+        client.query()
+          .df('title')
+          .spellcheckQuery({
+            q: 'tes',
+            build: true,
+            collate: true,
+            maxCollations: 5,
+            maxCollationTries: 3,
+            maxCollationEvaluations: 2,
+            collateExtendedResults: true,
+            collateMaxCollectDocs: 5,
+            dictionary: "defaule",
+            extendedResults: true,
+            onlyMorePopular: true,
+            maxResultsForSuggest: 5,
+            alternativeTermCount: 3,
+            reload: true,
+            accuracy: 1.0
+          });
+      //when
+      var result = client.spell(query);
+      //then
+      return expect(result).to.eventually.have.property('spellcheck');
+    });
   });
 
   describe('#update', function() {
@@ -558,6 +703,19 @@ describe('Client', function() {
         expect(result.responseHeader).to.exist;
         done();
       });
+    });
+
+    it('should resolve with the response when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      var data = {
+        text: 'test',
+        title: 'test'
+      };
+      //when
+      var result = client.update(data);
+      //then
+      return expect(result).to.eventually.have.property('responseHeader');
     });
   });
 
@@ -616,6 +774,16 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should resolve with the response when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      var query = {id:'testid1'};
+      //when
+      var result = client.delete(query);
+      //then
+      return expect(result).to.eventually.have.property('responseHeader');
+    });
   });
 
   describe('#ping', function() {
@@ -629,6 +797,15 @@ describe('Client', function() {
         expect(result.responseHeader).to.exist;
         done();
       });
+    });
+
+    it('should resolve with the response when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client.ping();
+      //then
+      return expect(result).to.eventually.have.property('responseHeader');
     });
   });
 
@@ -644,6 +821,15 @@ describe('Client', function() {
         done();
       });
     });
+
+    it('should resolve with the response when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client.commit();
+      //then
+      return expect(result).to.eventually.have.property('responseHeader');
+    });
   });
 
   describe('#softCommit', function() {
@@ -657,6 +843,15 @@ describe('Client', function() {
         expect(result.responseHeader).to.exist;
         done();
       });
+    });
+
+    it('should resolve with the response when there is no callback', function() {
+      //given
+      var client = new Client({core: 'test'});
+      //when
+      var result = client.softCommit();
+      //then
+      return expect(result).to.eventually.have.property('responseHeader');
     });
   });
 
