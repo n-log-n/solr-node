@@ -171,6 +171,19 @@ client.delete(objQuery, function(err, result) {
 
 ```
 
+### Promise support
+
+Skip the callback to get a promise back. ie:
+```js
+var result = solrClient.search(query)
+    .then(function(result) {
+      console.log('Response:', result.response);
+    })
+    .catch(function(err) {
+      console.error(err);
+    });
+```
+
 ## Test & Coverage & Docs
 
 ```
